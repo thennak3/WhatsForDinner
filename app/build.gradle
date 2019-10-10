@@ -44,11 +44,16 @@ dependencies {
     //Define Room Database dependencies
 
     def room_version = "2.2.0-rc01"
+    def lifecycle_version = "2.2.0-alpha03"
 
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
-
     testImplementation "androidx.room:room-testing:$room_version"
 
+    //Lifecycle
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
+
+    androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
 
 }
