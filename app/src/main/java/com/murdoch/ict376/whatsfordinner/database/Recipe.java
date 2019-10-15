@@ -8,11 +8,12 @@ import androidx.room.Entity;
 import androidx.room.Fts4;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 import java.util.Date;
 
-@Fts4
 @Entity
+@TypeConverters(DateTypeConverter.class)
 public class Recipe {
 
     @PrimaryKey (autoGenerate = true)
@@ -21,6 +22,14 @@ public class Recipe {
 
     @ColumnInfo( name = "Name" )
     private String name;
+
+    public void setPicture(byte[] picture) {
+        this.picture = picture;
+    }
+
+    public byte[] getPicture() {
+        return picture;
+    }
 
     @ColumnInfo( name = "Picture", typeAffinity = ColumnInfo.BLOB)
     private byte[] picture;
@@ -54,7 +63,7 @@ public class Recipe {
     }
 
 
-    public Recipe(int recipeID, String name, byte[] picture, String prepTime, String cookTime, String websiteURL, String letsEatRecipeUUID, Boolean userAdded,Date dateModified)
+  /*  public Recipe(int recipeID, String name, byte[] picture, String prepTime, String cookTime, String websiteURL, String letsEatRecipeUUID, Boolean userAdded,Date dateModified)
     {
         this.recipeID = recipeID;
         this.name = name;
@@ -65,7 +74,7 @@ public class Recipe {
         this.letsEatRecipeUUID = letsEatRecipeUUID;
         this.userAdded = userAdded;
         this.dateModified = dateModified;
-    }
+    }*/
 
     public String getName() {
         return name;
@@ -125,5 +134,9 @@ public class Recipe {
 
     public void setDateModified(Date dateModified) {
         this.dateModified = dateModified;
+    }
+
+    public void setRecipeID(int recipeID) {
+        this.recipeID = recipeID;
     }
 }

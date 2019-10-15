@@ -1,14 +1,62 @@
 package com.murdoch.ict376.whatsfordinner;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
+
+import com.murdoch.ict376.whatsfordinner.database.Recipe;
+import com.murdoch.ict376.whatsfordinner.view.RecipeListAdapter;
+import com.murdoch.ict376.whatsfordinner.view.RecipeViewModel;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    private RecipeViewModel mRecipeViewModel;
+
+    public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerview);
+        final RecipeListAdapter adapter = new RecipeListAdapter(this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+        mRecipeViewModel.getAllRecipes().observe(this, new Observer<List<Recipe>>() {
+            @Override
+            public void onChanged(List<Recipe> recipes) {
+                adapter.setRecipes(recipes);
+            }
+        });
+
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
+        if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK){
+        Recipe recipe = new Recipe(data.getStringExtra(NewRecipeActivity.EXTRA_REPLY));
+        mRecipeViewModel.insert(recipe);
+
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.empty_recipe_not_saved, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void fabOnClick(View view)
+    {
+        Intent intent = new Intent(MainActivity.this,NewRecipeActivity.class);
+        startActivityForResult(intent,NEW_WORD_ACTIVITY_REQUEST_CODE);
     }
 }

@@ -20,7 +20,7 @@ public class LetsEatRepository {
 
     //Recipe
 
-    LiveData<List<Recipe>> getAllRecipes() {
+    public LiveData<List<Recipe>> getAllRecipes() {
         return mAllRecipes;
     }
 

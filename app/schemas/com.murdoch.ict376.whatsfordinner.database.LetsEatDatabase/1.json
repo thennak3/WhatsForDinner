@@ -1,0 +1,82 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "12f2664131b54ec76b16c774e9ee2477",
+    "entities": [
+      {
+        "tableName": "Recipe",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`RecipeID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Name` TEXT, `Picture` BLOB, `PreparationTime` TEXT, `CookingTime` TEXT, `WebsiteURL` TEXT, `LetsEatRecipeUUID` TEXT, `UserAdded` INTEGER, `DateModified` INTEGER)",
+        "fields": [
+          {
+            "fieldPath": "recipeID",
+            "columnName": "RecipeID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "Name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "picture",
+            "columnName": "Picture",
+            "affinity": "BLOB",
+            "notNull": false
+          },
+          {
+            "fieldPath": "prepTime",
+            "columnName": "PreparationTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cookTime",
+            "columnName": "CookingTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "websiteURL",
+            "columnName": "WebsiteURL",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "letsEatRecipeUUID",
+            "columnName": "LetsEatRecipeUUID",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "userAdded",
+            "columnName": "UserAdded",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dateModified",
+            "columnName": "DateModified",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "RecipeID"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '12f2664131b54ec76b16c774e9ee2477')"
+    ]
+  }
+}
