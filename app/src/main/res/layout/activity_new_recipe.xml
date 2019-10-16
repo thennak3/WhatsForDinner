@@ -85,7 +85,7 @@
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1">
+        >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -102,6 +102,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:drawable/editbox_background"/>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="@dimen/label_width"
+            android:maxWidth="@dimen/label_width"
+            android:layout_marginStart="6dp"
+            android:layout_marginLeft="6dp"
+            android:text="@string/label_website"/>
+        <ImageView
+            android:id="@+id/recipe_image"
+            android:hint="@string/label_website"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:drawable/editbox_background"
+            android:onClick="showImagePickerDialog"
+            />
     </LinearLayout>
 
     <Button

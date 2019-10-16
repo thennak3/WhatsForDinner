@@ -7,10 +7,11 @@ import java.io.Serializable;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Fts4;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
+
+import com.murdoch.ict376.whatsfordinner.helper.ImageConverter;
 
 import java.util.Date;
 
@@ -55,7 +56,22 @@ public class Recipe implements Serializable{
     private Date dateModified;
 
     @Ignore
-    Bitmap storedImage;
+    private transient Bitmap storedImage;
+
+    @Ignore
+    public Bitmap GetImage()
+    {
+        if(storedImage == null)
+            storedImage = ImageConverter.EncodeBitmap(picture);
+        return storedImage;
+    }
+
+    @Ignore
+    public void SetImage(Bitmap bitmap)
+    {
+        storedImage = bitmap;
+        picture = ImageConverter.DecodeBitmap(storedImage);
+    }
 
 
     public Recipe(@NonNull String name)
