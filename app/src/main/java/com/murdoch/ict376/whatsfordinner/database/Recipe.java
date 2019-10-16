@@ -2,6 +2,8 @@ package com.murdoch.ict376.whatsfordinner.database;
 
 import android.graphics.Bitmap;
 
+import java.io.Serializable;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -14,7 +16,7 @@ import java.util.Date;
 
 @Entity
 @TypeConverters(DateTypeConverter.class)
-public class Recipe {
+public class Recipe implements Serializable{
 
     @PrimaryKey (autoGenerate = true)
     @ColumnInfo(name = "RecipeID")

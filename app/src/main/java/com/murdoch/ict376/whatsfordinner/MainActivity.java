@@ -14,14 +14,18 @@ import android.widget.Toast;
 import com.murdoch.ict376.whatsfordinner.database.Recipe;
 import com.murdoch.ict376.whatsfordinner.view.RecipeListAdapter;
 import com.murdoch.ict376.whatsfordinner.view.RecipeViewModel;
+import com.murdoch.ict376.whatsfordinner.view.RecyclerViewClickListener;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RecyclerViewClickListener {
 
     private RecipeViewModel mRecipeViewModel;
 
     public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
+    public static final int EDIT_WORD_ACTIVITY_REQUEST_CODE = 2;
+
+    RecipeListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        final RecipeListAdapter adapter = new RecipeListAdapter(this);
+        adapter = new RecipeListAdapter(this,this);
+
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -46,10 +51,14 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode,resultCode,data);
         if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK){
-        Recipe recipe = new Recipe(data.getStringExtra(NewRecipeActivity.EXTRA_REPLY));
-        mRecipeViewModel.insert(recipe);
+            Recipe recipe = (Recipe)data.getSerializableExtra(NewRecipeActivity.EXTRA_REPLY);
+            mRecipeViewModel.insert(recipe);
 
-        } else {
+        } else if(requestCode == EDIT_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            Recipe recipe = (Recipe)data.getSerializableExtra(NewRecipeActivity.EXTRA_REPLY);
+            mRecipeViewModel.update(recipe);
+        }
+        else {
             Toast.makeText(getApplicationContext(), R.string.empty_recipe_not_saved, Toast.LENGTH_SHORT).show();
         }
     }
@@ -58,5 +67,11 @@ public class MainActivity extends AppCompatActivity {
     {
         Intent intent = new Intent(MainActivity.this,NewRecipeActivity.class);
         startActivityForResult(intent,NEW_WORD_ACTIVITY_REQUEST_CODE);
+    }
+
+    @Override
+    public void recyclerViewListClicked(View v, int position) {
+        Intent intent = NewRecipeActivity.GetEditRecipeIntent(MainActivity.this,adapter.getRecipe(position));
+        startActivityForResult(intent,EDIT_WORD_ACTIVITY_REQUEST_CODE);
     }
 }

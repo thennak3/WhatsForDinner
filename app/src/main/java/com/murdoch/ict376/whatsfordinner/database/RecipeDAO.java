@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -21,6 +22,9 @@ public interface RecipeDAO {
 
     @Query("DELETE FROM Recipe")
     void deleteAll();
+
+    @Update
+    void updateRecipe(Recipe recipe);
 
     @Query("SELECT * FROM RECIPE ORDER BY NAME")
     LiveData<List<Recipe>> getAllRecipes();

@@ -15,20 +15,35 @@ import java.util.List;
 
 public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeViewHolder>
 {
-    class RecipeViewHolder extends RecyclerView.ViewHolder {
+    public static class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private final TextView recipeItemView;
+        private final TextView recipeLastEaten;
 
-        private RecipeViewHolder(View itemView) {
+
+
+        public RecipeViewHolder(View itemView) {
             super(itemView);
-            recipeItemView = itemView.findViewById(R.id.textView);
+            recipeItemView = itemView.findViewById(R.id.recipeName);
+            recipeLastEaten = itemView.findViewById(R.id.tvLastEaten);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            itemListener.recyclerViewListClicked(v,this.getLayoutPosition());
         }
     }
 
     private final LayoutInflater mInflator;
     private List<Recipe> mRecipe;
+    private static RecyclerViewClickListener itemListener;
 
     //Constructor
-    public RecipeListAdapter(Context context) { mInflator = LayoutInflater.from(context); }
+    public RecipeListAdapter(Context context,RecyclerViewClickListener itemListener) {
+        mInflator = LayoutInflater.from(context);
+        this.itemListener = itemListener;
+
+    }
 
     @Override
     public RecipeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -41,13 +56,20 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         if (mRecipe != null) {
             Recipe current = mRecipe.get(position);
             holder.recipeItemView.setText(current.getName());
+
         } else {
             holder.recipeItemView.setText("No Name");
         }
+
+
     }
     public void setRecipes(List<Recipe> recipes) {
         mRecipe = recipes;
         notifyDataSetChanged();
+    }
+
+    public Recipe getRecipe(int index) {
+        return mRecipe.get(index);
     }
 
     @Override

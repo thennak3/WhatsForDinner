@@ -6,4 +6,14 @@
     <string name="hint_recipe">Recipe...</string>
     <string name="button_save">Save</string>
     <string name="empty_recipe_not_saved">Recipe not saved because it is empty</string>
+    <string name="label_recipe">Recipe</string>
+    <string name="label_preparation_time">Preparation Time</string>
+    <string name="label_cookingtime">Cooking Time</string>
+    <string name="label_website">Website</string>
+    <string name="label_instructions">Instructions</string>
+    <string name="label_ingredients">Ingredients</string>
+    <string name="label_picture">Picture</string>
+    <string name="add_recipe">Add A New Recipe</string>
+    <string name="edit_recipe">Edit Recipe</string>
+
 </resources>
