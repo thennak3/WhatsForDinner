@@ -9,11 +9,14 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {Recipe.class}, version = 1)
+@Database(entities = {Recipe.class, Category.class,RecipeCategory.class}, version = 2)
 public abstract class LetsEatDatabase extends RoomDatabase {
     public abstract RecipeDAO recipeDAO();
+    public abstract CategoryDAO categoryDAO();
+    public abstract RecipeCategoryDAO recipeCategoryDAO();
 
     private static volatile LetsEatDatabase INSTANCE;
+
 
     private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
 
@@ -27,7 +30,7 @@ public abstract class LetsEatDatabase extends RoomDatabase {
     static LetsEatDatabase getDatabase(final Context context){
         if(INSTANCE == null) {
             synchronized (LetsEatDatabase.class){
-                INSTANCE = Room.databaseBuilder(context.getApplicationContext(), LetsEatDatabase.class,"letseat_database").addCallback(sRoomDatabaseCallback).build();
+                INSTANCE = Room.databaseBuilder(context.getApplicationContext(), LetsEatDatabase.class,"letseat_database").fallbackToDestructiveMigration().addCallback(sRoomDatabaseCallback).build();
             }
         }
         return INSTANCE;
@@ -35,9 +38,13 @@ public abstract class LetsEatDatabase extends RoomDatabase {
 
     private static class PopulateDbAsync extends AsyncTask<Void,Void,Void> {
         private final RecipeDAO mRecipe;
+        private final CategoryDAO mCategory;
+        private final RecipeCategoryDAO mRecipeCategory;
 
         PopulateDbAsync(LetsEatDatabase db) {
             mRecipe = db.recipeDAO();
+            mCategory = db.categoryDAO();
+            mRecipeCategory = db.recipeCategoryDAO();
         }
 
         @Override
