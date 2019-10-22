@@ -18,60 +18,25 @@ import com.murdoch.ict376.whatsfordinner.view.RecyclerViewClickListener;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements RecyclerViewClickListener {
+public class MainActivity extends AppCompatActivity  {
 
-    private RecipeViewModel mRecipeViewModel;
 
-    public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
-    public static final int EDIT_WORD_ACTIVITY_REQUEST_CODE = 2;
-
-    RecipeListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        adapter = new RecipeListAdapter(this,this);
-
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
-        mRecipeViewModel.getAllRecipes().observe(this, new Observer<List<Recipe>>() {
-            @Override
-            public void onChanged(List<Recipe> recipes) {
-                adapter.setRecipes(recipes);
-            }
-        });
-
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode,resultCode,data);
-        if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK){
-            Recipe recipe = (Recipe)data.getSerializableExtra(NewRecipeActivity.EXTRA_REPLY);
-            mRecipeViewModel.insert(recipe);
-
-        } else if(requestCode == EDIT_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            Recipe recipe = (Recipe)data.getSerializableExtra(NewRecipeActivity.EXTRA_REPLY);
-            mRecipeViewModel.update(recipe);
-        }
-        else {
-            Toast.makeText(getApplicationContext(), R.string.empty_recipe_not_saved, Toast.LENGTH_SHORT).show();
-        }
+    public void LaunchRecipes(View view) {
+        Intent intent = new Intent(this,RecipeList.class);
+        startActivity(intent);
     }
 
-    public void fabOnClick(View view)
-    {
-        Intent intent = new Intent(MainActivity.this,NewRecipeActivity.class);
-        startActivityForResult(intent,NEW_WORD_ACTIVITY_REQUEST_CODE);
+    public void LaunchCategories(View view) {
+        Intent intent = new Intent(this,CategoriesListActivity.class);
+        startActivity(intent);
     }
 
-    @Override
-    public void recyclerViewListClicked(View v, int position) {
-        Intent intent = NewRecipeActivity.GetEditRecipeIntent(MainActivity.this,adapter.getRecipe(position));
-        startActivityForResult(intent,EDIT_WORD_ACTIVITY_REQUEST_CODE);
-    }
+
 }

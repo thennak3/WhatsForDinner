@@ -3,7 +3,7 @@
     package="com.murdoch.ict376.whatsfordinner">
 
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -12,7 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ViewRecipeActivity"></activity>
+        <activity android:name=".NewCategoryActivity"></activity>
+        <activity android:name=".RecipeList" />
+        <activity
+            android:name=".CategoriesListActivity"
+            android:label="@string/title_activity_categories_list"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".NewRecipeActivity" />
         <activity android:name=".Home" />
         <activity android:name=".MainActivity">

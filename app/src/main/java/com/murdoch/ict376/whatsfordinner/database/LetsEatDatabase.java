@@ -54,6 +54,12 @@ public abstract class LetsEatDatabase extends RoomDatabase {
             mRecipe.insert(recipe);
             recipe = new Recipe("Chimi Chungas");
             mRecipe.insert(recipe);
+
+            mCategory.deleteAll();
+            Category category = new Category("Beef");
+            mCategory.insert(category);
+            category = new Category("Chicken");
+            mCategory.insert(category);
             return null;
         }
     }

@@ -2,6 +2,7 @@ package com.murdoch.ict376.whatsfordinner.database;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
@@ -19,6 +20,9 @@ public interface RecipeDAO {
 
     @Query("DELETE FROM RECIPE WHERE RecipeID = :id")
     void deleteByID(int id);
+
+    @Delete
+    void delete(Recipe...recipes);
 
     @Query("DELETE FROM Recipe")
     void deleteAll();

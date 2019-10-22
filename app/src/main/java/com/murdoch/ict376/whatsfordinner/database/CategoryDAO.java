@@ -12,15 +12,18 @@ import java.util.List;
 @Dao
 public interface CategoryDAO {
     @Insert
-    void Insert(Category... categories);
+    void insert(Category... categories);
 
     @Update
-    void Update(Category... categories);
+    void update(Category... categories);
 
     @Delete
-    void Delete(Category... categories);
+    void delete(Category... categories);
 
     @Query("select * from category")
     LiveData<List<Category>> getAllCategories();
+
+    @Query("delete from category")
+    void deleteAll();
 
 }
