@@ -1,4 +1,4 @@
-package com.murdoch.ict376.whatsfordinner;
+package com.murdoch.ict376.whatsfordinner.view;
 
 import androidx.lifecycle.ViewModel;
 
