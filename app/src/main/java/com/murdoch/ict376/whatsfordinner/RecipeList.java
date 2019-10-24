@@ -12,13 +12,15 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.murdoch.ict376.whatsfordinner.database.Recipe;
+import com.murdoch.ict376.whatsfordinner.database.RecipeCategory;
+import com.murdoch.ict376.whatsfordinner.helper.AfterDBOperationListener;
 import com.murdoch.ict376.whatsfordinner.view.RecipeListAdapter;
 import com.murdoch.ict376.whatsfordinner.view.RecipeViewModel;
 import com.murdoch.ict376.whatsfordinner.view.RecyclerViewClickListener;
 
 import java.util.List;
 
-public class RecipeList extends AppCompatActivity implements RecyclerViewClickListener {
+public class RecipeList extends AppCompatActivity implements RecyclerViewClickListener, AfterDBOperationListener {
 
     private RecipeViewModel mRecipeViewModel;
 
@@ -26,13 +28,16 @@ public class RecipeList extends AppCompatActivity implements RecyclerViewClickLi
     public static final int EDIT_RECIPE_ACTIVITY_REQUEST_CODE = 2;
 
     RecipeListAdapter adapter;
+
+    int[] categoryData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        adapter = new RecipeListAdapter(this,this);
+        adapter = new RecipeListAdapter(this, this);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -47,31 +52,43 @@ public class RecipeList extends AppCompatActivity implements RecyclerViewClickLi
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode,resultCode,data);
-        if (requestCode == NEW_RECIPE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK){
-            Recipe recipe = (Recipe)data.getSerializableExtra(NewRecipeActivity.EXTRA_REPLY);
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == NEW_RECIPE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            Recipe recipe = (Recipe) data.getSerializableExtra(NewRecipeActivity.EXTRA_REPLY);
+            categoryData = (int[]) data.getIntArrayExtra(NewRecipeActivity.EXTRA_CATEGORIES);
+            mRecipeViewModel.setDelegate(this);
             mRecipeViewModel.insert(recipe);
-
-        } else if(requestCode == EDIT_RECIPE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            Recipe recipe = (Recipe)data.getSerializableExtra(NewRecipeActivity.EXTRA_REPLY);
+        } else if (requestCode == EDIT_RECIPE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            Recipe recipe = (Recipe) data.getSerializableExtra(NewRecipeActivity.EXTRA_REPLY);
+            categoryData = (int[]) data.getIntArrayExtra(NewRecipeActivity.EXTRA_CATEGORIES);
             mRecipeViewModel.update(recipe);
-        }
-        else {
+            afterDBOperation(Long.valueOf(recipe.getRecipeID()));
+        } else {
             Toast.makeText(getApplicationContext(), R.string.empty_recipe_not_saved, Toast.LENGTH_SHORT).show();
         }
     }
 
 
-
-    public void fabOnClick(View view)
-    {
-        Intent intent = new Intent(RecipeList.this,NewRecipeActivity.class);
+    public void fabOnClick(View view) {
+        Intent intent = new Intent(RecipeList.this, NewRecipeActivity.class);
         startActivityForResult(intent, NEW_RECIPE_ACTIVITY_REQUEST_CODE);
     }
 
     @Override
     public void recyclerViewListClicked(View v, int position) {
-        Intent intent = NewRecipeActivity.GetEditRecipeIntent(RecipeList.this,adapter.getRecipe(position));
+        Intent intent = NewRecipeActivity.GetEditRecipeIntent(RecipeList.this, adapter.getRecipe(position));
         startActivityForResult(intent, EDIT_RECIPE_ACTIVITY_REQUEST_CODE);
+    }
+
+    @Override
+    public void afterDBOperation(Long result)
+    {
+
+        mRecipeViewModel.deleteRecipeCategory(result);
+        for(int i = 0;i<categoryData.length;i++){
+            RecipeCategory newcat = new RecipeCategory(result.intValue(),categoryData[i]);
+            mRecipeViewModel.insert(newcat);
+        }
+
     }
 }

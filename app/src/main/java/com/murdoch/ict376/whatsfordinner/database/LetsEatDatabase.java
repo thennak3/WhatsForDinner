@@ -49,13 +49,15 @@ public abstract class LetsEatDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(final Void... params) {
+            mRecipeCategory.deleteAll();
+            mCategory.deleteAll();
             mRecipe.deleteAll();
             Recipe recipe = new Recipe("Beef Lasagna");
             mRecipe.insert(recipe);
             recipe = new Recipe("Chimi Chungas");
             mRecipe.insert(recipe);
 
-            mCategory.deleteAll();
+
             Category category = new Category("Beef");
             mCategory.insert(category);
             category = new Category("Chicken");

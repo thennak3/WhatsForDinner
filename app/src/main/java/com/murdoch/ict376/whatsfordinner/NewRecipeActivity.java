@@ -1,6 +1,11 @@
 package com.murdoch.ict376.whatsfordinner;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LifecycleRegistry;
+import androidx.lifecycle.Observer;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,6 +13,7 @@ import android.content.Intent;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -21,14 +27,23 @@ import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.features.IpCons;
 import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.model.Image;
+import com.murdoch.ict376.whatsfordinner.database.Category;
 import com.murdoch.ict376.whatsfordinner.database.Recipe;
+import com.murdoch.ict376.whatsfordinner.database.RecipeCategory;
 import com.murdoch.ict376.whatsfordinner.helper.ImageHelper;
+import com.murdoch.ict376.whatsfordinner.view.RecipeViewModel;
+import com.sayantan.advancedspinner.MultiSpinner;
+import com.sayantan.advancedspinner.MultiSpinnerListener;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class NewRecipeActivity extends AppCompatActivity {
 
     public static final String EXTRA_REPLY = "com.murdoch.ict376.whatsfordinner.recipelistsql.REPLY";
+    public static final String EXTRA_CATEGORIES = "com.murdoch.ict376.whatsfordinner.recipelistsql.CATEGORIES";
 
     static final String RECIPE_DATA = "com.murdoch.ict376.whatsfordinner.RECIPEDATA";
 
@@ -39,15 +54,25 @@ public class NewRecipeActivity extends AppCompatActivity {
     private TextView mLabelTitle;
     private ImageView mImageView;
 
+    private MultiSpinner mCategorySpinner;
+
     private Boolean isEdit = false;
 
     private Recipe mRecipe;
 
     ImageHelper imageHelper;
 
+    List<Category> mCategories;
+    List<RecipeCategory> recipeCategories;
+
+    private LifecycleRegistry lifecycleRegistry;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        lifecycleRegistry = new LifecycleRegistry(this);
+        lifecycleRegistry.markState(Lifecycle.State.CREATED);
 
         setContentView(R.layout.activity_new_recipe);
 
@@ -57,10 +82,64 @@ public class NewRecipeActivity extends AppCompatActivity {
         mEditWebsiteURLView = findViewById(R.id.website_url);
         mLabelTitle = findViewById(R.id.header);
         mImageView = findViewById(R.id.recipe_image);
-
+        mCategorySpinner = findViewById(R.id.category_spinner);
 
 
         imageHelper = new ImageHelper(this);
+
+        RecipeViewModel recipeViewModel = new RecipeViewModel(getApplication());
+
+        recipeViewModel.getAllCategories().observe(this, new Observer<List<Category>>() {
+            @Override
+            public void onChanged(List<Category> categories) {
+                mCategories = categories;
+
+                List<String> categoryNames = new ArrayList<>();
+                if (categories != null) {
+                    for (int i = 0; i < categories.size(); i++) {
+                        categoryNames.add(categories.get(i).getName());
+                    }
+
+                    mCategorySpinner.setSpinnerList(categoryNames);
+                    mCategorySpinner.selectNone();
+
+                    if (isEdit) {
+                        recipeCategories = recipeViewModel.getAllRecipeCategoriesByRecipeID(mRecipe.getRecipeID());
+
+                        runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                // Stuff that updates the UI
+                                boolean[] selected = new boolean[categories.size()];
+                                for (int i = 0; i < recipeCategories.size(); i++) {
+                                    int recipeCategoryID = recipeCategories.get(i).CategoryID;
+                                    for (int j = 0; j < categories.size(); j++) {
+                                        if (categories.get(j).categoryID == recipeCategoryID) {
+                                            selected[j] = true;
+                                            break;
+                                        }
+
+                                    }
+                                }
+                                mCategorySpinner.setSelected(selected);
+                            }
+
+                        });
+                    }
+
+
+                }
+            }
+        });
+
+
+        mCategorySpinner.addOnItemsSelectedListener(new MultiSpinnerListener() {
+            @Override
+            public void onItemsSelected(List choices, boolean[] selected) {
+
+            }
+        });
 
 
         final Button button = findViewById(R.id.button_save);
@@ -77,7 +156,9 @@ public class NewRecipeActivity extends AppCompatActivity {
                     } else {
                         mRecipe = new Recipe(mEditRecipeNameView.getText().toString());
                         updateFields();
+                        int[] retCatValues = getCategoryFields();
                         replyIntent.putExtra(EXTRA_REPLY, mRecipe);
+                        replyIntent.putExtra(EXTRA_CATEGORIES, retCatValues);
                         setResult(RESULT_OK, replyIntent);
                     }
                 }
@@ -87,8 +168,11 @@ public class NewRecipeActivity extends AppCompatActivity {
                     } else {
                         mRecipe.setName(mEditRecipeNameView.getText().toString());
                         updateFields();
+                        int[] retCatValues = getCategoryFields();
                         replyIntent.putExtra(EXTRA_REPLY,mRecipe);
+                        replyIntent.putExtra(EXTRA_CATEGORIES, retCatValues);
                         setResult(RESULT_OK,replyIntent);
+
                     }
                 }
                 finish();
@@ -104,6 +188,7 @@ public class NewRecipeActivity extends AppCompatActivity {
             setFields();
         }
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, final int resultCode, Intent data)
@@ -133,6 +218,26 @@ public class NewRecipeActivity extends AppCompatActivity {
         mEditPreparationTimeView.setText(mRecipe.getPrepTime());
         mEditWebsiteURLView.setText(mRecipe.getWebsiteURL());
         setImageField();
+    }
+
+    private int[] getCategoryFields() {
+        boolean[] selected = mCategorySpinner.getSelected();
+        int scount = 0;
+        for(int i = 0;i<selected.length;i++)
+        {
+            if(selected[i])
+                scount++;
+        }
+
+        int[] categoryValues = new int[scount];
+        scount = 0;
+        for(int i = 0;i<selected.length;i++)
+        {
+            if(selected[i]) {
+                categoryValues[scount] = mCategories.get(i).categoryID;
+            }
+        }
+        return categoryValues;
     }
 
     private void setImageField()
@@ -177,4 +282,5 @@ public class NewRecipeActivity extends AppCompatActivity {
 
         startActivityForResult(imagePicker.getIntent(this),IpCons.RC_IMAGE_PICKER);
     }
+
 }
