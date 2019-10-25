@@ -20,6 +20,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".NewRecipeActivity" />
         <activity android:name=".Calendar" />
+        <activity android:name=".AddMealActivity" />
         <activity android:name=".Home" />
         <activity android:name=".MainActivity">
             <intent-filter>
