@@ -43,5 +43,10 @@ public class MainActivity extends AppCompatActivity  {
         startActivity(intent);
     }
 
+    public void LaunchRecipeSelect(View view) {
+        Intent intent = new Intent(this,SelectRecipeListActivity.class);
+        startActivity(intent);
+    }
+
 
 }

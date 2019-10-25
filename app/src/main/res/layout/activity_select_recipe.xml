@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RecipeList"
+    android:orientation="vertical">
+
+    <com.sayantan.advancedspinner.SingleSpinner
+        android:id="@+id/category_recipe_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/select_recipe_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
+        tools:listitem="@layout/recipe_recyclerview_item"
+        android:layout_weight="1"
+         />
+    </androidx.core.widget.NestedScrollView>
+
+
+
+</LinearLayout>

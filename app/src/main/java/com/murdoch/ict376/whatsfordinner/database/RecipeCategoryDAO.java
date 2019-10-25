@@ -19,7 +19,7 @@ public interface RecipeCategoryDAO {
     List<Category> getCategoriesForRecipe(int recipeID);
 
     @Query("select Recipe.RecipeID, Name, Picture, PreparationTime, CookingTime, WebsiteURL, LetsEatRecipeUUID, UserAdded, DateModified  from Recipe inner join RecipeCategory on Recipe.RecipeID = RecipeCategory.RecipeID where RecipeCategory.CategoryID=:categoryID")
-    List<Recipe> getRecipesForCategory(int categoryID);
+    LiveData<List<Recipe>> getRecipesForCategory(int categoryID);
 
     @Query("select * from RecipeCategory where recipeID=:id")
     List<RecipeCategory> getRecipeCategoriesByRecipeID(int id);

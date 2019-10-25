@@ -41,4 +41,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/launch_categories_button" />
 
+    <Button
+        android:id="@+id/launch_recipe_select_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="132dp"
+        android:onClick="LaunchRecipeSelect"
+        android:text="View Recipe Select List"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/launch_categories_button" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
