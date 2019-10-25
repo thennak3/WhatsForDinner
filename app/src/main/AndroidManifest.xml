@@ -21,6 +21,7 @@
         <activity android:name=".NewRecipeActivity" />
         <activity android:name=".Calendar" />
         <activity android:name=".Home" />
+        <activity android:name=".SelectRecipeListActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

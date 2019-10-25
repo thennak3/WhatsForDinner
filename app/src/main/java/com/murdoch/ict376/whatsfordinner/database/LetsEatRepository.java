@@ -22,6 +22,8 @@ public class LetsEatRepository {
 
     private LiveData<List<Category>> mAllCategories;
 
+    private LiveData<List<Recipe>> mRecipesFilteredCategory;
+
     public LetsEatRepository(Application application) {
         LetsEatDatabase db = LetsEatDatabase.getDatabase(application);
         mRecipeDao = db.recipeDAO();
@@ -37,14 +39,28 @@ public class LetsEatRepository {
         return mAllRecipes;
     }
 
+    public List<Category> getAllCategoriesAsync() throws ExecutionException, InterruptedException {
+        return new getAllAsyncTaskCategory(mCategoryDao).execute().get();
+    }
+
+
     public LiveData<List<Category>> getAllCategories() {
         if(mAllCategories == null)
             mAllCategories = mCategoryDao.getAllCategories();
         return mAllCategories;
     }
 
+    public LiveData<List<Recipe>> getAllRecipesByCategoryID(int id) {
+        mRecipesFilteredCategory = mRecipeCategoryDao.getRecipesForCategory(id);
+        return mRecipesFilteredCategory;
+    }
+
     public List<RecipeCategory> getRecipeCategoryByRecipeID(int id) throws ExecutionException, InterruptedException {
         return new getAllAsyncTask(mRecipeCategoryDao,id).execute().get();
+    }
+
+    public LiveData<List<Recipe>> getRecipesForCategory(Integer value) {
+        return mRecipeCategoryDao.getRecipesForCategory(value);
     }
 
     private static class getAllAsyncTask extends AsyncTask<Void,Void,List<RecipeCategory>> {
@@ -61,6 +77,22 @@ public class LetsEatRepository {
         @Override
         protected List<RecipeCategory> doInBackground(Void...voids) {
             return mRecipeCategoryDao.getRecipeCategoriesByRecipeID(id);
+        }
+    }
+
+    private static class getAllAsyncTaskCategory extends AsyncTask<Void,Void,List<Category>> {
+        private CategoryDAO mCategoryDao;
+        List<Category> cat;
+
+
+
+        getAllAsyncTaskCategory(CategoryDAO dao) {
+            mCategoryDao = dao;
+        }
+
+        @Override
+        protected List<Category> doInBackground(Void...voids) {
+            return mCategoryDao.getAllCategoriesList();
         }
     }
 
