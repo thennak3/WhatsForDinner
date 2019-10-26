@@ -14,15 +14,17 @@ import java.util.concurrent.ExecutionException;
 
 public class LetsEatRepository {
 
+    //dao variables
     private RecipeDAO mRecipeDao;
     private CategoryDAO mCategoryDao;
     private RecipeCategoryDAO mRecipeCategoryDao;
+    private MealDAO mMealDao;
 
+    //livedata variables
     private LiveData<List<Recipe>> mAllRecipes;
-
     private LiveData<List<Category>> mAllCategories;
-
     private LiveData<List<Recipe>> mRecipesFilteredCategory;
+    private LiveData<List<Meal>> mAllMeals;
 
     public LetsEatRepository(Application application) {
         LetsEatDatabase db = LetsEatDatabase.getDatabase(application);
@@ -30,6 +32,8 @@ public class LetsEatRepository {
         mCategoryDao = db.categoryDAO();
         mRecipeCategoryDao = db.recipeCategoryDAO();
         mAllRecipes = mRecipeDao.getAllRecipes();
+        mMealDao = db.mealDAO();
+        mAllMeals = mMealDao.getAllMeals();
 
     }
 
@@ -39,11 +43,16 @@ public class LetsEatRepository {
         return mAllRecipes;
     }
 
+    public LiveData<List<Meal>> getAllMeals(){
+        return mAllMeals;
+    }
+
     public List<Category> getAllCategoriesAsync() throws ExecutionException, InterruptedException {
         return new getAllAsyncTaskCategory(mCategoryDao).execute().get();
     }
 
 
+    //get methods for LiveData encapsulated Lists of data - for use in the View Models
     public LiveData<List<Category>> getAllCategories() {
         if(mAllCategories == null)
             mAllCategories = mCategoryDao.getAllCategories();
@@ -55,13 +64,21 @@ public class LetsEatRepository {
         return mRecipesFilteredCategory;
     }
 
+    public LiveData<List<Recipe>> getRecipesForCategory(Integer value) {
+        return mRecipeCategoryDao.getRecipesForCategory(value);
+    }
+
+
+
+    //get methods for lists of data
     public List<RecipeCategory> getRecipeCategoryByRecipeID(int id) throws ExecutionException, InterruptedException {
         return new getAllAsyncTask(mRecipeCategoryDao,id).execute().get();
     }
 
-    public LiveData<List<Recipe>> getRecipesForCategory(Integer value) {
-        return mRecipeCategoryDao.getRecipesForCategory(value);
+    public List<RecipeCategory> getRecipeCategoryByCategoryID(int id) {
+        return mRecipeCategoryDao.getRecipeCategoriesByCategoryID(id);
     }
+
 
     private static class getAllAsyncTask extends AsyncTask<Void,Void,List<RecipeCategory>> {
         private RecipeCategoryDAO mRecipeCategoryDao;
@@ -96,30 +113,25 @@ public class LetsEatRepository {
         }
     }
 
-    public List<RecipeCategory> getRecipeCategoryByCategoryID(int id) {
-        return mRecipeCategoryDao.getRecipeCategoriesByCategoryID(id);
-    }
 
-
-
+    //DAO get methods
     public RecipeDAO getRecipeDao(){
         return mRecipeDao;
     }
-
     public CategoryDAO getCategoryDao() {
         return mCategoryDao;
     }
+    public MealDAO getmMealDao() {return mMealDao;}
 
+    //expose insertAsyncTest class to outer class
     public void insert(Recipe recipe) { new insertAsyncTask(mRecipeDao,recipe,null).execute(); }
-
     public void insert(Category category) { new insertAsyncTask(mCategoryDao,category,null).execute(); }
-
     public void insert(Recipe recipe,AfterDBOperationListener listener) { new insertAsyncTask(mRecipeDao,recipe,listener).execute(); }
-
     public void insert(Category category,AfterDBOperationListener listener) { new insertAsyncTask(mCategoryDao,category,listener).execute(); }
-
     public void insert(RecipeCategory recipeCategory) { new insertAsyncTask(mRecipeCategoryDao,recipeCategory, null).execute(); }
+    public void insert(Meal meal, AfterDBOperationListener listener) { new insertAsyncTask(mMealDao, meal, listener).execute(); }
 
+    //Async insert implementation for database
     private static class insertAsyncTask extends AsyncTask<Void,Void,Long> {
         private RecipeDAO mAsyncRecipeDao;
         private Recipe recipe;
@@ -129,6 +141,9 @@ public class LetsEatRepository {
 
         private RecipeCategoryDAO mAsyncRecipeCategoryDao;
         private RecipeCategory recipeCategory;
+
+        private MealDAO mAsyncMealDao;
+        private Meal meal;
 
         private WeakReference<AfterDBOperationListener> asyncDelegate;
 
@@ -150,6 +165,12 @@ public class LetsEatRepository {
             asyncDelegate = new WeakReference<>(listener);
         }
 
+        insertAsyncTask(MealDAO dao, Meal meal, AfterDBOperationListener listener) {
+            this.mAsyncMealDao = dao;
+            this.meal = meal;
+            asyncDelegate = new WeakReference<>(listener);
+        }
+
         @Override
         protected Long doInBackground(final Void... voids) {
             //check what's been set
@@ -159,6 +180,9 @@ public class LetsEatRepository {
                 return mAsyncCategoryDao.insert(category);
             if(mAsyncRecipeCategoryDao != null)
                 mAsyncRecipeCategoryDao.insert(recipeCategory);
+            if(mAsyncMealDao != null)
+                mAsyncMealDao.insert(meal);
+
             return null;
         }
 
@@ -170,9 +194,14 @@ public class LetsEatRepository {
         }
     }
 
+    //Async update implementation for database
+
     public void update(Recipe recipe) { new updateAsyncTask(mRecipeDao,recipe).execute(); }
 
     public void update(Category category) { new updateAsyncTask(mCategoryDao,category).execute(); }
+
+    public void update(Meal meal) { new updateAsyncTask(mMealDao,meal).execute(); }
+
 
     private static class updateAsyncTask extends AsyncTask<Void,Void,Void> {
         private RecipeDAO mAsyncRecipeDao;
@@ -181,16 +210,24 @@ public class LetsEatRepository {
         private CategoryDAO mAsyncCategoryDao;
         private Category category;
 
+        private MealDAO mAsyncMealDao;
+        private Meal meal;
 
+
+        //Overloading to handle different database tables
         updateAsyncTask(RecipeDAO dao,Recipe recipe){
                 mAsyncRecipeDao = dao;
                 this.recipe = recipe;
             }
 
-
         updateAsyncTask(CategoryDAO categoryDAO, Category category) {
             this.mAsyncCategoryDao = categoryDAO;
             this.category = category;
+        }
+
+        updateAsyncTask(MealDAO dao, Meal meal) {
+            this.mAsyncMealDao = dao;
+            this.meal = meal;
         }
 
             @Override
@@ -203,9 +240,15 @@ public class LetsEatRepository {
                 if(mAsyncCategoryDao != null) {
                     mAsyncCategoryDao.update(category);
                 }
+                if(mAsyncMealDao != null) {
+                    mAsyncMealDao.updateMeal(meal);
+                }
+
                 return null;
             }
     }
+
+    //Async delete implementation for database
 
     public void deleteRecipeCategory(Long id) { new deleteAsyncTask(mRecipeCategoryDao,id).execute(); }
 
@@ -218,6 +261,9 @@ public class LetsEatRepository {
 
         private RecipeCategoryDAO mAsyncRecipeCategoryDao;
         private Long id;
+
+        private MealDAO mAsyncMealDao;
+        private Meal meal;
 
         deleteAsyncTask(RecipeDAO dao,Recipe recipe) {
             mAsyncRecipeDao = dao;
@@ -234,6 +280,11 @@ public class LetsEatRepository {
             this.id = id;
         }
 
+        deleteAsyncTask(MealDAO dao, Meal meal) {
+            this.mAsyncMealDao = dao;
+            this.meal = meal;
+        }
+
         @Override
         protected Void doInBackground(final Void... voids) {
             //check what's been set
@@ -243,6 +294,9 @@ public class LetsEatRepository {
                 mAsyncCategoryDao.delete(category);
             if(mAsyncRecipeCategoryDao != null)
                 mAsyncRecipeCategoryDao.delete(id);
+            if(mAsyncMealDao != null)
+                mAsyncMealDao.delete(meal);
+
             return null;
         }
     }

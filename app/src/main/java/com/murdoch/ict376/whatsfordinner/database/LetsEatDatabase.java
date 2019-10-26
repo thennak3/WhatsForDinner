@@ -9,11 +9,12 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {Recipe.class, Category.class,RecipeCategory.class}, version = 2)
+@Database(entities = {Recipe.class, Category.class,RecipeCategory.class, Meal.class}, version = 3)
 public abstract class LetsEatDatabase extends RoomDatabase {
     public abstract RecipeDAO recipeDAO();
     public abstract CategoryDAO categoryDAO();
     public abstract RecipeCategoryDAO recipeCategoryDAO();
+    public abstract MealDAO mealDAO();
 
     private static volatile LetsEatDatabase INSTANCE;
 
@@ -40,13 +41,16 @@ public abstract class LetsEatDatabase extends RoomDatabase {
         private final RecipeDAO mRecipe;
         private final CategoryDAO mCategory;
         private final RecipeCategoryDAO mRecipeCategory;
+        private final MealDAO mMeal;
 
         PopulateDbAsync(LetsEatDatabase db) {
             mRecipe = db.recipeDAO();
             mCategory = db.categoryDAO();
             mRecipeCategory = db.recipeCategoryDAO();
+            mMeal = db.mealDAO();
         }
 
+        //add test database data here
         @Override
         protected Void doInBackground(final Void... params) {
             mRecipeCategory.deleteAll();
