@@ -26,6 +26,7 @@ public class Calendar extends AppCompatActivity implements OnDateSelectedListene
     private MaterialCalendarView mealCalendar;
     private static final int ADD_MEAL = 48;
     public static final String RESULT = "result";
+    private boolean mealSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,8 @@ public class Calendar extends AppCompatActivity implements OnDateSelectedListene
 
     private void addMeal() {
         Intent intent = new Intent(this, AddMealActivity.class);
+        intent.putExtra("DATE_SET", mealCalendar.getSelectedDate().toString());
+        intent.putExtra("MEAL_SELECTED", mealSelected);
         startActivityForResult(intent, ADD_MEAL);
     }
 
@@ -68,12 +71,16 @@ public class Calendar extends AppCompatActivity implements OnDateSelectedListene
         Log.d("DATE", "onDateSelected: current date= " + mealCalendar.getCurrentDate().toString());
         //Toast.makeText(getApplicationContext(), mealCalendar.getSelectedDate().toString(), Toast.LENGTH_SHORT).show();
 
+        boolean mealSelected = MealChecker.run(date);
+
         if (date == mealCalendar.getCurrentDate())
         {
-            //Toast.makeText(getApplicationContext(),"Date is confirmed", Toast.LENGTH_SHORT).show();
+            mealSelected = true;
+            addMeal();
         }
         else
         {
+            mealSelected = false;
             addMeal();
         }
 
@@ -102,15 +109,17 @@ public class Calendar extends AppCompatActivity implements OnDateSelectedListene
             return dates;
         }
 
-    @Override
-    protected void onPostExecute(@NonNull List<CalendarDay> calendarDays) {
-        super.onPostExecute(calendarDays);
+        @Override
+        protected void onPostExecute(@NonNull List<CalendarDay> calendarDays) {
+            super.onPostExecute(calendarDays);
 
-        if (isFinishing()) {
-            return;
+            if (isFinishing()) {
+                return;
+            }
+
+            mealCalendar.addDecorator(new MealDecorator(Color.RED, calendarDays));
         }
 
-        mealCalendar.addDecorator(new MealDecorator(Color.RED, calendarDays));
     }
-}
+
 }
