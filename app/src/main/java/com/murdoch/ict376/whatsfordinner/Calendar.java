@@ -71,9 +71,9 @@ public class Calendar extends AppCompatActivity implements OnDateSelectedListene
         Log.d("DATE", "onDateSelected: current date= " + mealCalendar.getCurrentDate().toString());
         //Toast.makeText(getApplicationContext(), mealCalendar.getSelectedDate().toString(), Toast.LENGTH_SHORT).show();
 
-        boolean mealSelected = MealChecker.run(date);
+        boolean mealDateSelected = MealChecker.run(date);
 
-        if (date == mealCalendar.getCurrentDate())
+        if (mealDateSelected)
         {
             mealSelected = true;
             addMeal();

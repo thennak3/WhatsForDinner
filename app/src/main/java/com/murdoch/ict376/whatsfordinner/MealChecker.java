@@ -8,11 +8,11 @@ import java.util.ArrayList;
 
 public class MealChecker {
 
-    private boolean hasMeal = false;
+    public static boolean run(CalendarDay mealCalendar) {
 
+        boolean hasMeal = false;
 
-    public boolean run(CalendarDay mealCalendar) {
-
+        //Replace list with database call
         LocalDate temp = LocalDate.now().minusMonths(2);
         final ArrayList<CalendarDay> dates = new ArrayList<>();
         for (int i = 0; i < 30; i++) {
