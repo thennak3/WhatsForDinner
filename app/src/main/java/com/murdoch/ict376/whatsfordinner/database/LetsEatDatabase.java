@@ -9,6 +9,12 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.murdoch.ict376.whatsfordinner.helper.DateHelper;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 @Database(entities = {Recipe.class, Category.class,RecipeCategory.class, Meal.class}, version = 3)
 public abstract class LetsEatDatabase extends RoomDatabase {
     public abstract RecipeDAO recipeDAO();
@@ -56,6 +62,7 @@ public abstract class LetsEatDatabase extends RoomDatabase {
             mRecipeCategory.deleteAll();
             mCategory.deleteAll();
             mRecipe.deleteAll();
+            mMeal.deleteAll();
             Recipe recipe = new Recipe("Beef Lasagna");
             mRecipe.insert(recipe);
             recipe = new Recipe("Chimi Chungas");
@@ -66,6 +73,16 @@ public abstract class LetsEatDatabase extends RoomDatabase {
             mCategory.insert(category);
             category = new Category("Chicken");
             mCategory.insert(category);
+
+            Meal meal = new Meal();
+            meal.setMealDate(DateHelper.getStartOfDay(new Date()));
+            mMeal.insert(meal);
+
+            meal = new Meal();
+            Date date = DateHelper.getStartOfDay(new Date());
+            date.setDate(date.getDate()-7);
+            meal.setMealDate(DateHelper.getStartOfDay(date));
+            mMeal.insert(meal);
             return null;
         }
     }

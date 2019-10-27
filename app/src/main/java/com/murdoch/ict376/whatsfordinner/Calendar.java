@@ -6,18 +6,30 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+
 import android.content.Intent;
 
 import android.util.Log;
 import android.widget.Toast;
+
+import com.murdoch.ict376.whatsfordinner.database.Meal;
+import com.murdoch.ict376.whatsfordinner.view.MealFilter;
+import com.murdoch.ict376.whatsfordinner.view.MealViewModel;
+import com.murdoch.ict376.whatsfordinner.view.RecipeViewModel;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.murdoch.ict376.whatsfordinner.decorators.MealDecorator;
+import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
 import org.threeten.bp.LocalDate;
+import org.threeten.bp.ZoneId;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -28,6 +40,12 @@ public class Calendar extends AppCompatActivity implements OnDateSelectedListene
     public static final String RESULT = "result";
     private boolean mealSelected;
 
+    private final MealDecorator mealDecorator = new MealDecorator();
+
+    MealViewModel mMealViewModel;
+    List<Meal> currentMeals;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,16 +55,59 @@ public class Calendar extends AppCompatActivity implements OnDateSelectedListene
         mealCalendar.setOnDateChangedListener(this);
         mealCalendar.setShowOtherDates(MaterialCalendarView.SHOW_ALL);
 
+        mMealViewModel = ViewModelProviders.of(this).get(MealViewModel.class);
+
+
         final LocalDate instance = LocalDate.now();
         mealCalendar.setSelectedDate(instance);
+        mealCalendar.setOnMonthChangedListener(new OnMonthChangedListener() {
+            @Override
+            public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+                Toast.makeText(getApplicationContext(),"Changed month " + date.getDate().minusMonths(1).toString() + " to " + date.getDate().plusMonths(1).toString(),Toast.LENGTH_SHORT).show();
+                MealFilter mealFilter = new MealFilter();
+                mealFilter.startDate = org.threeten.bp.DateTimeUtils.toDate(date.getDate().minusMonths(1).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+                mealFilter.endDate = org.threeten.bp.DateTimeUtils.toDate(date.getDate().plusMonths(1).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+                mMealViewModel.filterMeals(mealFilter);
+            }
+        });
 
+        MealFilter mealFilter = new MealFilter();
+        mealFilter.startDate = org.threeten.bp.DateTimeUtils.toDate(instance.minusMonths(1).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+        mealFilter.endDate = org.threeten.bp.DateTimeUtils.toDate(instance.plusMonths(1).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+        mMealViewModel.filterMeals(mealFilter);
 
-        new ApiSimulator().executeOnExecutor(Executors.newSingleThreadExecutor());
+        mMealViewModel.getMeals().observe(this, new Observer<List<Meal>>() {
+            @Override
+            public void onChanged(List<Meal> meals) {
+                MealsUpdated(meals);
+            }
+        });
 
+        mealCalendar.addDecorator(mealDecorator);
+
+        //new ApiSimulator().executeOnExecutor(Executors.newSingleThreadExecutor());
+
+    }
+
+    void MealsUpdated(List<Meal> meals) {
+        currentMeals = meals;
+        Toast.makeText(getApplicationContext(),"Meals list updated",Toast.LENGTH_SHORT).show();
+
+        List<LocalDate> dates = new ArrayList<>();
+
+        for(int i = 0;i<meals.size();i++)
+        {
+            //convert date to livedate, add to list and give to your decorator class here..
+            dates.add(org.threeten.bp.DateTimeUtils.toInstant(meals.get(i).getMealDate()).atZone(ZoneId.systemDefault()).toLocalDate());
+        }
+
+        mealDecorator.setDates(dates);
+        mealCalendar.invalidateDecorators();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
         if (requestCode == ADD_MEAL && resultCode == RESULT_OK) {
             Toast.makeText(getApplicationContext(), "Meal Added", Toast.LENGTH_SHORT).show();
         }
@@ -89,10 +150,11 @@ public class Calendar extends AppCompatActivity implements OnDateSelectedListene
 
     }
 
-    private class ApiSimulator extends AsyncTask<Void, Void, List<CalendarDay>> {
+    /*
+    private class ApiSimulator extends AsyncTask<Void, Void, ArrayList<CalendarDay>> {
 
         @Override
-        protected List<CalendarDay> doInBackground(@NonNull Void... voids) {
+        protected ArrayList<CalendarDay> doInBackground(@NonNull Void... voids) {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
@@ -110,16 +172,15 @@ public class Calendar extends AppCompatActivity implements OnDateSelectedListene
         }
 
         @Override
-        protected void onPostExecute(@NonNull List<CalendarDay> calendarDays) {
+        protected void onPostExecute(@NonNull ArrayList<CalendarDay> calendarDays) {
             super.onPostExecute(calendarDays);
 
             if (isFinishing()) {
                 return;
             }
 
-            mealCalendar.addDecorator(new MealDecorator(Color.RED, calendarDays));
         }
 
-    }
+    }*/
 
 }

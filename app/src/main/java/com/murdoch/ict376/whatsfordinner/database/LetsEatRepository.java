@@ -79,6 +79,10 @@ public class LetsEatRepository {
         return mRecipeCategoryDao.getRecipeCategoriesByCategoryID(id);
     }
 
+    public LiveData<List<Meal>> getMealsByDates(Date startDate, Date endDate) {
+        return mMealDao.getMealsByDates(startDate,endDate);
+    }
+
 
     private static class getAllAsyncTask extends AsyncTask<Void,Void,List<RecipeCategory>> {
         private RecipeCategoryDAO mRecipeCategoryDao;

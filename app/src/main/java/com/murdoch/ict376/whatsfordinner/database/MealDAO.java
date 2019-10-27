@@ -6,11 +6,14 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.TypeConverters;
 import androidx.room.Update;
 
+import java.util.Date;
 import java.util.List;
 
 @Dao
+@TypeConverters(DateTypeConverter.class)
 public interface MealDAO {
 
     @Query("SELECT * FROM MEAL WHERE MealDate = :date LIMIT 1")
@@ -22,7 +25,7 @@ public interface MealDAO {
     */
 
     @Query("DELETE FROM MEAL WHERE mealDate = :date")
-    void deletebyDate(int date);
+    void deletebyDate(Date date);
 
     @Query("SELECT * FROM MEAL ORDER BY MealDate")
     LiveData<List<Meal>> getAllMeals();
@@ -38,6 +41,12 @@ public interface MealDAO {
 
     @Delete
     void delete(Meal...meals);
+
+    @Delete
+    void delete(Meal meal);
+
+    @Query("Select * FROM MEAL WHERE mealDate >=:startDate AND mealdate <=:endDate")
+    LiveData<List<Meal>> getMealsByDates(Date startDate, Date endDate);
 
     /* for use if we extend to multiple meals
     @Query("SELECT * FROM MEAL WHERE MealID = :id LIMIT 1")

@@ -27,6 +27,7 @@ import static com.murdoch.ict376.whatsfordinner.RecipeList.EDIT_RECIPE_ACTIVITY_
 
 public class SelectRecipeListActivity extends AppCompatActivity implements RecyclerViewClickListener {
 
+    public static final String RECIPEREPLY = "com.murdoch.ict376.whatsfordinner.RECIPE.SELECTED";
 
     RecipeListViewModel mRecipeViewModel;
 
@@ -88,6 +89,10 @@ public class SelectRecipeListActivity extends AppCompatActivity implements Recyc
     @Override
     public void recyclerViewListClicked(View v, int position) {
         //return result
-        //adapter.getRecipe(position)
+
+        Intent replyIntent = new Intent();
+        replyIntent.putExtra(RECIPEREPLY, adapter.getRecipe(position).getRecipeID());
+        setResult(RESULT_OK, replyIntent);
+
     }
 }
