@@ -26,7 +26,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         public RecipeViewHolder(View itemView) {
             super(itemView);
             recipeItemView = itemView.findViewById(R.id.recipeName);
-            recipeLastEaten = itemView.findViewById(R.id.tvLastEaten);
+            recipeLastEaten = itemView.findViewById(R.id.textview_meal_info);
             recipeImage = itemView.findViewById(R.id.recipeImageView);
             itemView.setOnClickListener(this);
         }

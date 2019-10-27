@@ -33,6 +33,7 @@ public class Meal implements Serializable {
     @ColumnInfo (name = "MealTypeID")
     private int mealTypeID;
 
+    //limit to recipeID
     @ColumnInfo (name = "RecipeID")
     private int recipeID;
 

@@ -1,30 +1,55 @@
 package com.murdoch.ict376.whatsfordinner;
 
-import androidx.appcompat.app.AppCompatActivity;
+//import androidx.appcompat.app.AppCompatActivity;
+import android.app.Activity;
 
 import android.os.Bundle;
 import android.content.Intent;
-import android.text.Layout;
 import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Button;
 import android.view.View;
-import com.prolificinteractive.materialcalendarview.CalendarDay;
-import org.threeten.bp.LocalDate;
+
+import androidx.appcompat.app.AppCompatActivity;
+import com.murdoch.ict376.whatsfordinner.view.MealViewModel;
+
+
+import org.w3c.dom.Text;
 
 
 public class AddMealActivity extends AppCompatActivity {
+
+    AddMealFragment addmealfragment;
+    MealDetailsFragment mealdetailsfragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_meal);
 
-        final TextView date = (TextView) findViewById(R.id.mealDate);
-        Button button = (Button) findViewById(R.id.button);
-        Button mealButton = (Button) findViewById(R.id.button_choose_meal);
-        LinearLayout mealLayout = (LinearLayout) findViewById(R.id.layout_meal_selected);
+        addmealfragment = new AddMealFragment();
+        mealdetailsfragment = new MealDetailsFragment();
+
+
+        getFragmentManager().beginTransaction()
+                .add(R.id.updatemeal_container, addmealfragment).commit();
+
+
+        getFragmentManager().beginTransaction()
+                .add(R.id.details_container, mealdetailsfragment).commit();
+
+
+        /*
+        final TextView date = findViewById(R.id.mealDate);
+        TextView mealstatus = findViewById(R.id.text_meal_status);
+        Button addoreditbutton = findViewById(R.id.addoredit_button);
+        TextView recipename = findViewById(R.id.recipeName);
+        TextView mealinfo = findViewById(R.id.textview_meal_info);
+
+
+        //Button mealButton = findViewById(R.id.button_choose_meal);
+        //LinearLayout mealLayout = findViewById(R.id.layout_meal_selected);
 
         Intent intent = getIntent();
         String setDate = intent.getStringExtra("DATE_SET");
@@ -38,19 +63,22 @@ public class AddMealActivity extends AppCompatActivity {
         if (mealSelected)
         {
             Log.d("mealSelected", "onCreate: TRUE");
-            mealButton.setText("Change Selected Meal");
-            mealLayout.setVisibility(View.VISIBLE);
+            mealstatus.setText("Meal Selected");
+            addoreditbutton.setText("Change Selected Meal");
+            //mealLayout.setVisibility(View.VISIBLE);
         }
         else
         {
             Log.d("mealSelected", "onCreate: FALSE");
-            mealButton.setText("Select Meal");
+            mealstatus.setText("Meal Not Selected");
+            addoreditbutton.setText("Select Meal");
         }
 
 
-        button.setOnClickListener(new View.OnClickListener() {
+        addoreditbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
                 Intent returnIntent = new Intent();
 
                 String mealDay = date.toString();
@@ -58,7 +86,14 @@ public class AddMealActivity extends AppCompatActivity {
                 returnIntent.putExtra(Calendar.RESULT, mealDay);
                 setResult(Calendar.RESULT_OK, returnIntent);
                 finish();
+
+
+                //Intent intent = new Intent(this, RecipeList.class);
+                //startActivity(intent);
+
+
             }
         });
+        */
     }
 }

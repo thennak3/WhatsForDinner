@@ -1,95 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Calendar">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/updatemeal_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_height="136dp">
 
-        <LinearLayout
-            android:layout_width="314dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+    </FrameLayout>
 
-            <EditText
-                android:id="@+id/mealDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="date" />
+    <FrameLayout
+        android:id="@+id/details_container"
+        android:layout_width="match_parent"
+        android:layout_height="507dp">
 
-            <TextView
-                android:id="@+id/text_meal_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-            <Button
-                android:id="@+id/button_choose_meal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Choose Meal" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <LinearLayout
-                android:id="@+id/layout_meal_selected"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:visibility="invisible">
-
-                <ImageView
-                    android:id="@+id/recipeImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/noimage"
-                    android:maxHeight="130dp"
-                    android:scaleType="centerCrop"
-                    android:minHeight="130dp"
-                    android:minWidth="130dp"
-                    android:maxWidth="130dp"
-                    android:adjustViewBounds="true"
-
-                    />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="6dp"
-                    android:layout_marginBottom="10dp"
-                    >
-                    <TextView
-                        android:id="@+id/recipeName"
-                        style="@style/recipe_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        />
-                    <TextView
-                        android:id="@+id/tvLastEaten"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        />
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add Meal" />
-    </LinearLayout>
-
-</FrameLayout>
+    </FrameLayout>
+</LinearLayout>
