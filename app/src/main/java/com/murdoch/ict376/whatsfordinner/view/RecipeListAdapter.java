@@ -44,7 +44,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
     //Constructor
     public RecipeListAdapter(Context context,RecyclerViewClickListener itemListener) {
         mInflator = LayoutInflater.from(context);
-        this.itemListener = itemListener;
+        RecipeListAdapter.itemListener = itemListener;
 
     }
 

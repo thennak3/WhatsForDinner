@@ -84,6 +84,8 @@ public class LetsEatRepository {
     }
 
 
+
+
     private static class getAllAsyncTask extends AsyncTask<Void,Void,List<RecipeCategory>> {
         private RecipeCategoryDAO mRecipeCategoryDao;
         List<RecipeCategory> rc;
@@ -256,6 +258,8 @@ public class LetsEatRepository {
 
     public void deleteRecipeCategory(Long id) { new deleteAsyncTask(mRecipeCategoryDao,id).execute(); }
 
+    public void deleteMealbyDate(Date date) { new deleteAsyncTask(mMealDao,date).execute(); }
+
     private static class deleteAsyncTask extends AsyncTask<Void,Void,Void> {
         private RecipeDAO mAsyncRecipeDao;
         private Recipe recipe;
@@ -268,6 +272,7 @@ public class LetsEatRepository {
 
         private MealDAO mAsyncMealDao;
         private Meal meal;
+        private Date date;
 
         deleteAsyncTask(RecipeDAO dao,Recipe recipe) {
             mAsyncRecipeDao = dao;
@@ -289,6 +294,11 @@ public class LetsEatRepository {
             this.meal = meal;
         }
 
+        deleteAsyncTask(MealDAO dao, Date date) {
+            this.mAsyncMealDao = dao;
+            this.date = date;
+        }
+
         @Override
         protected Void doInBackground(final Void... voids) {
             //check what's been set
@@ -298,9 +308,10 @@ public class LetsEatRepository {
                 mAsyncCategoryDao.delete(category);
             if(mAsyncRecipeCategoryDao != null)
                 mAsyncRecipeCategoryDao.delete(id);
-            if(mAsyncMealDao != null)
+            if(mAsyncMealDao != null && meal != null)
                 mAsyncMealDao.delete(meal);
-
+            if(mAsyncMealDao != null && date != null)
+                mAsyncMealDao.deletebyDate(date);
             return null;
         }
     }

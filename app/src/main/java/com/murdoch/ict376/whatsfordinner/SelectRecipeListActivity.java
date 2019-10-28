@@ -44,6 +44,7 @@ public class SelectRecipeListActivity extends AppCompatActivity implements Recyc
 
         RecyclerView recyclerView = findViewById(R.id.select_recipe_recycler);
         adapter = new RecipeListAdapter(this, this);
+
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -93,6 +94,7 @@ public class SelectRecipeListActivity extends AppCompatActivity implements Recyc
         Intent replyIntent = new Intent();
         replyIntent.putExtra(RECIPEREPLY, adapter.getRecipe(position).getRecipeID());
         setResult(RESULT_OK, replyIntent);
+        finish();
 
     }
 }

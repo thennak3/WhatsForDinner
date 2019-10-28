@@ -15,7 +15,7 @@ import android.app.Fragment;
 
 import com.murdoch.ict376.whatsfordinner.view.MealViewModel;
 
-public class MealDetailsFragment extends Fragment {
+public class MealDetailsFragment extends androidx.fragment.app.Fragment {
 
     private View mLayoutView;
     private MealViewModel model;

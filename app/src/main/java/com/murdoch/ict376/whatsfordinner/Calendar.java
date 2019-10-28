@@ -15,6 +15,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.murdoch.ict376.whatsfordinner.database.Meal;
+import com.murdoch.ict376.whatsfordinner.helper.DateHelper;
 import com.murdoch.ict376.whatsfordinner.view.MealFilter;
 import com.murdoch.ict376.whatsfordinner.view.MealViewModel;
 import com.murdoch.ict376.whatsfordinner.view.RecipeViewModel;
@@ -30,6 +31,9 @@ import org.threeten.bp.ZoneId;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -43,7 +47,9 @@ public class Calendar extends AppCompatActivity implements OnDateSelectedListene
     private final MealDecorator mealDecorator = new MealDecorator();
 
     MealViewModel mMealViewModel;
-    List<Meal> currentMeals;
+
+
+    HashMap<CalendarDay,Meal> mealList;
 
 
     @Override
@@ -90,15 +96,19 @@ public class Calendar extends AppCompatActivity implements OnDateSelectedListene
     }
 
     void MealsUpdated(List<Meal> meals) {
-        currentMeals = meals;
+
         Toast.makeText(getApplicationContext(),"Meals list updated",Toast.LENGTH_SHORT).show();
 
-        List<LocalDate> dates = new ArrayList<>();
+        ArrayList<CalendarDay> dates = new ArrayList<>();
 
+        mealList = new HashMap<>();
+        CalendarDay temp;
         for(int i = 0;i<meals.size();i++)
         {
             //convert date to livedate, add to list and give to your decorator class here..
-            dates.add(org.threeten.bp.DateTimeUtils.toInstant(meals.get(i).getMealDate()).atZone(ZoneId.systemDefault()).toLocalDate());
+            temp = DateHelper.toCalendarDay(meals.get(i).getMealDate());
+            dates.add(temp);
+            mealList.put(temp,meals.get(i));
         }
 
         mealDecorator.setDates(dates);
@@ -115,8 +125,15 @@ public class Calendar extends AppCompatActivity implements OnDateSelectedListene
 
     private void addMeal() {
         Intent intent = new Intent(this, AddMealActivity.class);
-        intent.putExtra("DATE_SET", mealCalendar.getSelectedDate().toString());
-        intent.putExtra("MEAL_SELECTED", mealSelected);
+        CalendarDay day = mealCalendar.getSelectedDate();
+        intent.putExtra("DATE_SET", DateHelper.toDate(day));
+        if(mealList.containsKey(mealCalendar.getSelectedDate())){
+            intent.putExtra("MEAL_SELECTED", true);
+            intent.putExtra("RECIPE_ID",mealList.get(day).getRecipeID());
+        }
+        else
+            intent.putExtra("MEAL_SELECTED", false);
+
         startActivityForResult(intent, ADD_MEAL);
     }
 

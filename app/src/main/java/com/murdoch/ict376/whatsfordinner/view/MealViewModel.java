@@ -49,6 +49,7 @@ public class MealViewModel extends AndroidViewModel {
 
     public void insert(Meal meal) { mRepository.insert(meal ,delegate); }
     public void update(Meal meal) { mRepository.update(meal); }
+    public void delete(Date date) { mRepository.deleteMealbyDate(date); }
 
 
 

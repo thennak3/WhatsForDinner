@@ -1,5 +1,11 @@
 package com.murdoch.ict376.whatsfordinner.helper;
 
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.ZoneOffset;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -20,4 +26,17 @@ public class DateHelper {
         return cal.getTime();
     }
 
+    public static LocalDate toLocalDate(Date date)
+    {
+        return org.threeten.bp.DateTimeUtils.toInstant(date).atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
+    public static CalendarDay toCalendarDay(Date date) {
+        return CalendarDay.from(toLocalDate(date));
+    }
+
+    public static Date toDate(CalendarDay calendarDay)
+    {
+        return org.threeten.bp.DateTimeUtils.toDate(calendarDay.getDate().atStartOfDay().toInstant(ZoneOffset.UTC));
+    }
 }

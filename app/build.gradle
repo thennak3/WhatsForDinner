@@ -40,8 +40,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta3'
+
 
 
 
@@ -51,10 +52,12 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
+
+
     //Define Room Database dependencies
 
     def room_version = "2.2.1"
-    def lifecycle_version = "2.2.0-beta01"
+    def lifecycle_version = "2.2.0-rc01"
 
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
@@ -81,6 +84,7 @@ dependencies {
 
     //Multiselect Spinner
     implementation 'com.github.Liocoder24x7:Advanced-Spinner:v1.0'
+
 
 
 

@@ -39,11 +39,9 @@ public class MealDecorator implements DayViewDecorator {
         view.addSpan(new DotSpan(5, color));
     }
 
-    public void setDates(List<LocalDate> displayDates) {
-        ArrayList<CalendarDay> datesToAdd = new ArrayList<>();
-        for(int i = 0;i<displayDates.size();i++)
-            datesToAdd.add(CalendarDay.from(displayDates.get(i)));
-        dates = datesToAdd;
+    public void setDates(ArrayList<CalendarDay> displayDates) {
+
+        dates = displayDates;
 
     }
 }

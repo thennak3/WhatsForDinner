@@ -17,6 +17,8 @@ import com.murdoch.ict376.whatsfordinner.view.MealViewModel;
 
 import org.w3c.dom.Text;
 
+import java.util.Date;
+
 
 public class AddMealActivity extends AppCompatActivity {
 
@@ -28,15 +30,30 @@ public class AddMealActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_meal);
 
-        addmealfragment = new AddMealFragment();
+        Bundle extras = getIntent().getExtras();
+
+        Date date = null;
+        Boolean existingMeal = false;
+        int mealID = -1;
+
+        if(extras != null)
+        {
+            date = (Date)extras.getSerializable("DATE_SET");
+            existingMeal = extras.getBoolean("MEAL_SELECTED");
+            if(existingMeal)
+                mealID = extras.getInt("RECIPE_ID");
+        }
+
+        addmealfragment = AddMealFragment.newInstance(date,mealID);
+
         mealdetailsfragment = new MealDetailsFragment();
 
 
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .add(R.id.updatemeal_container, addmealfragment).commit();
 
 
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .add(R.id.details_container, mealdetailsfragment).commit();
 
 
