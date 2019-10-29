@@ -67,6 +67,8 @@ public class NewRecipeActivity extends AppCompatActivity {
 
     private LifecycleRegistry lifecycleRegistry;
 
+    private Bitmap selectedBitmap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +88,8 @@ public class NewRecipeActivity extends AppCompatActivity {
 
 
         imageHelper = new ImageHelper(this);
+
+
 
         RecipeViewModel recipeViewModel = new RecipeViewModel(getApplication());
 
@@ -155,6 +159,8 @@ public class NewRecipeActivity extends AppCompatActivity {
                         setResult(RESULT_CANCELED, replyIntent);
                     } else {
                         mRecipe = new Recipe(mEditRecipeNameView.getText().toString());
+                        if(selectedBitmap != null)
+                            mRecipe.SetImage(selectedBitmap);
                         updateFields();
                         int[] retCatValues = getCategoryFields();
                         replyIntent.putExtra(EXTRA_REPLY, mRecipe);
@@ -200,7 +206,10 @@ public class NewRecipeActivity extends AppCompatActivity {
 
                 Bitmap bitmap = imageHelper.LoadImage(imageHelper.GetImages().get(0));
                 if(bitmap != null) {
+                    if(mRecipe == null)
+                        mRecipe = new Recipe("");
                     mRecipe.SetImage(bitmap);
+                    selectedBitmap = bitmap;
                     setImageField();
                 }
 
@@ -235,6 +244,7 @@ public class NewRecipeActivity extends AppCompatActivity {
         {
             if(selected[i]) {
                 categoryValues[scount] = mCategories.get(i).categoryID;
+                scount++;
             }
         }
         return categoryValues;
