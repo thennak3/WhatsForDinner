@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class CategoriesListActivityFragment extends Fragment  implements RecyclerViewClickListener {
+public class CategoriesListActivityFragment extends androidx.fragment.app.Fragment  implements RecyclerViewClickListener {
 
     public CategoriesListActivityFragment() {
     }
@@ -55,7 +55,7 @@ public class CategoriesListActivityFragment extends Fragment  implements Recycle
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel.class);
-        categoryViewModel.getAllCategories().observe(this, new Observer<List<Category>>() {
+        categoryViewModel.getAllCategories().observe(getActivity(), new Observer<List<Category>>() {
             @Override
             public void onChanged(List<Category> categories) {
                 categoryListAdapter.setCategories(categories);

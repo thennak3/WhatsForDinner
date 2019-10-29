@@ -11,7 +11,7 @@
         android:name="com.murdoch.ict376.whatsfordinner.CategoriesListActivityFragment"
         android:label="Add Category"
         tools:layout="@layout/fragment_categories_list" />
-    <activity
+    <fragment
         android:id="@+id/nav_recipe_activity"
         android:name="com.murdoch.ict376.whatsfordinner.RecipeList"
         android:label="Add Recipe"
@@ -19,6 +19,6 @@
     <fragment
         android:id="@+id/nav_calendar_activity"
         android:name="com.murdoch.ict376.whatsfordinner.Calendar"
-        android:label="calendar_fragment"
+        android:label="Calendar"
         tools:layout="@layout/calendar_fragment" />
 </navigation>

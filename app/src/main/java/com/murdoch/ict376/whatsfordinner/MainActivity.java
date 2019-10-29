@@ -100,8 +100,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_recipe:
                 navController.navigate(R.id.nav_recipe_activity);
+                break;
             case R.id.nav_category:
                 navController.navigate(R.id.nav_categories_activity);
+                break;
         }
         return true;
 
