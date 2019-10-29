@@ -50,7 +50,7 @@ public class SelectRecipeListActivity extends AppCompatActivity implements Recyc
 
         mRecipeViewModel = ViewModelProviders.of(this).get(RecipeListViewModel.class);
         mRecipeViewModel.initAllRecipes();
-
+        mRecipeViewModel.filterCategoryAll.setValue(-1);
         mRecipeViewModel.recipeAllList.observe(this, new Observer<List<Recipe>>() {
             @Override
             public void onChanged(List<Recipe> recipes) {

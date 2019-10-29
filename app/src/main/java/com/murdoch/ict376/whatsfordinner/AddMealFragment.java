@@ -65,6 +65,7 @@ public class AddMealFragment extends androidx.fragment.app.Fragment{
 
         if(getMealID() != -1)
             addoreditbutton.setText("Select Recipe");
+        mMealViewModel.filterRecipe(getMealID());
 
         mealdate.setText("Meal Date " + DateHelper.getStartOfDay(getDate()).toString());
 
@@ -133,7 +134,7 @@ public class AddMealFragment extends androidx.fragment.app.Fragment{
            meal.setMealDate(DateHelper.getStartOfDay(getDate()));
            meal.setRecipeID(recipeID);
            mMealViewModel.insert(meal);
-
+           mMealViewModel.filterRecipe(recipeID);
 
        }
         super.onActivityResult(requestCode,resultCode,data);

@@ -33,5 +33,6 @@ public interface RecipeDAO {
     @Query("SELECT * FROM RECIPE ORDER BY NAME")
     LiveData<List<Recipe>> getAllRecipes();
 
-
+    @Query("SELECT * FROM RECIPE WHERE RecipeID=:input")
+    LiveData<Recipe> getRecipe(Integer input);
 }

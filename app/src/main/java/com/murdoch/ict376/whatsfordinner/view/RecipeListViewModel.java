@@ -30,6 +30,7 @@ public class RecipeListViewModel extends AndroidViewModel {
     LetsEatRepository mLetsEatRepository;
 
     public void initAllRecipes(){
+        filterCategoryAll.setValue(-1);
         recipeAllList = Transformations.switchMap(filterCategoryAll, input -> {
             if(input == null || input.equals(-1)) {
                 return mLetsEatRepository.getAllRecipes();
