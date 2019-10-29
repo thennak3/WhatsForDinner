@@ -50,7 +50,7 @@ public class Calendar extends Fragment implements OnDateSelectedListener {
     public static final String RESULT = "result";
     private boolean mealSelected;
 
-    private final MealDecorator mealDecorator = new MealDecorator();
+    private MealDecorator mealDecorator;
 
     MealViewModel mMealViewModel;
 
@@ -62,6 +62,7 @@ public class Calendar extends Fragment implements OnDateSelectedListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         RootView = inflater.inflate(R.layout.calendar_fragment, container, false);
+        mealDecorator = new MealDecorator(getActivity());
 
         return RootView;
     }
