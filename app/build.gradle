@@ -85,6 +85,8 @@ dependencies {
     //Multiselect Spinner
     implementation 'com.github.Liocoder24x7:Advanced-Spinner:v1.0'
 
+    implementation "android.arch.navigation:navigation-fragment:1.0.0"
+    implementation "android.arch.navigation:navigation-ui:1.0.0"
 
 
 

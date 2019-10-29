@@ -6,6 +6,7 @@ import org.threeten.bp.LocalDate;
 import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZoneOffset;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -24,6 +25,13 @@ public class DateHelper {
         cal.set(Calendar.SECOND, cal.getMinimum(Calendar.SECOND));
         cal.set(Calendar.MILLISECOND, cal.getMinimum(Calendar.MILLISECOND));
         return cal.getTime();
+    }
+
+    public static String SimpleDate(Date day)
+    {
+        String pattern = "dd-MM-yyyy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        return simpleDateFormat.format(day);
     }
 
     public static LocalDate toLocalDate(Date date)

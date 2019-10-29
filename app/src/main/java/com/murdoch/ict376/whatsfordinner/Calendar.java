@@ -6,12 +6,16 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Intent;
 
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.murdoch.ict376.whatsfordinner.database.Meal;
@@ -37,7 +41,9 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.Executors;
 
-public class Calendar extends AppCompatActivity implements OnDateSelectedListener {
+import static android.app.Activity.RESULT_OK;
+
+public class Calendar extends Fragment implements OnDateSelectedListener {
 
     private MaterialCalendarView mealCalendar;
     private static final int ADD_MEAL = 48;
@@ -48,15 +54,23 @@ public class Calendar extends AppCompatActivity implements OnDateSelectedListene
 
     MealViewModel mMealViewModel;
 
+    View RootView;
 
     HashMap<CalendarDay,Meal> mealList;
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        RootView = inflater.inflate(R.layout.calendar_fragment, container, false);
+
+        return RootView;
+    }
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.calendar_fragment);
-        mealCalendar = (MaterialCalendarView) findViewById(R.id.mealCalendar); // get the reference of CalendarView
+        mealCalendar = (MaterialCalendarView) RootView.findViewById(R.id.mealCalendar); // get the reference of CalendarView
 
         mealCalendar.setOnDateChangedListener(this);
         mealCalendar.setShowOtherDates(MaterialCalendarView.SHOW_ALL);
@@ -69,7 +83,7 @@ public class Calendar extends AppCompatActivity implements OnDateSelectedListene
         mealCalendar.setOnMonthChangedListener(new OnMonthChangedListener() {
             @Override
             public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
-                Toast.makeText(getApplicationContext(),"Changed month " + date.getDate().minusMonths(1).toString() + " to " + date.getDate().plusMonths(1).toString(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"Changed month " + date.getDate().minusMonths(1).toString() + " to " + date.getDate().plusMonths(1).toString(),Toast.LENGTH_SHORT).show();
                 MealFilter mealFilter = new MealFilter();
                 mealFilter.startDate = org.threeten.bp.DateTimeUtils.toDate(date.getDate().minusMonths(1).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
                 mealFilter.endDate = org.threeten.bp.DateTimeUtils.toDate(date.getDate().plusMonths(1).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
@@ -97,7 +111,7 @@ public class Calendar extends AppCompatActivity implements OnDateSelectedListene
 
     void MealsUpdated(List<Meal> meals) {
 
-        Toast.makeText(getApplicationContext(),"Meals list updated",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(),"Meals list updated",Toast.LENGTH_SHORT).show();
 
         ArrayList<CalendarDay> dates = new ArrayList<>();
 
@@ -116,15 +130,15 @@ public class Calendar extends AppCompatActivity implements OnDateSelectedListene
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode,resultCode,data);
         if (requestCode == ADD_MEAL && resultCode == RESULT_OK) {
-            Toast.makeText(getApplicationContext(), "Meal Added", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Meal Added", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void addMeal() {
-        Intent intent = new Intent(this, AddMealActivity.class);
+        Intent intent = new Intent(getActivity(), AddMealActivity.class);
         CalendarDay day = mealCalendar.getSelectedDate();
         intent.putExtra("DATE_SET", DateHelper.toDate(day));
         if(mealList.containsKey(mealCalendar.getSelectedDate())){

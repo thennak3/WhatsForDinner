@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_calendar_activity">
+
+
+    <fragment
+        android:id="@+id/nav_categories_activity"
+        android:name="com.murdoch.ict376.whatsfordinner.CategoriesListActivityFragment"
+        android:label="Add Category"
+        tools:layout="@layout/fragment_categories_list" />
+    <activity
+        android:id="@+id/nav_recipe_activity"
+        android:name="com.murdoch.ict376.whatsfordinner.RecipeList"
+        android:label="Add Recipe"
+        tools:layout="@layout/activity_recipe_list" />
+    <fragment
+        android:id="@+id/nav_calendar_activity"
+        android:name="com.murdoch.ict376.whatsfordinner.Calendar"
+        android:label="calendar_fragment"
+        tools:layout="@layout/calendar_fragment" />
+</navigation>
