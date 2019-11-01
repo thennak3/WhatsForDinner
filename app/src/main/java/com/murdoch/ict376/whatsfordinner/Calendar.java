@@ -70,7 +70,7 @@ public class Calendar extends Fragment implements OnDateSelectedListener {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onActivityCreated(savedInstanceState);
         mealCalendar = (MaterialCalendarView) RootView.findViewById(R.id.mealCalendar); // get the reference of CalendarView
 
         mealCalendar.setOnDateChangedListener(this);
@@ -97,7 +97,7 @@ public class Calendar extends Fragment implements OnDateSelectedListener {
         mealFilter.endDate = org.threeten.bp.DateTimeUtils.toDate(instance.plusMonths(1).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
         mMealViewModel.filterMeals(mealFilter);
 
-        mMealViewModel.getMeals().observe(this, new Observer<List<Meal>>() {
+        mMealViewModel.getMeals().observe(getActivity(), new Observer<List<Meal>>() {
             @Override
             public void onChanged(List<Meal> meals) {
                 MealsUpdated(meals);
