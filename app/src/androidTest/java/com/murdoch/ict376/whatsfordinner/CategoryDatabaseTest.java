@@ -55,5 +55,32 @@ public class CategoryDatabaseTest {
 
     }
 
+    @Test
+    public void updateCategoryAndCheckInList() throws Exception {
+        Category category = CategoryTest.createCategory("Testing");
+        Long returnID = mCategoryDAO.insert(category);
+
+        String updated_name = "Testing 2";
+        CategoryTest.updateCategory(category, updated_name);
+        mCategoryDAO.updateByName(returnID.intValue(), updated_name);
+
+        Category byID = mCategoryDAO.getByCategoryID(returnID.intValue());
+        assertThat(byID.categoryID).isEqualTo(returnID);
+        assertThat(updated_name).isEqualTo(byID.getName());
+
+    }
+
+    @Test
+    public void DeleteCategoryAndCheckInList() throws Exception {
+        Category category = CategoryTest.createCategory("Testing");
+        Long returnID = mCategoryDAO.insert(category);
+
+        mCategoryDAO.deleteByID(returnID.intValue());
+
+        Category byID = mCategoryDAO.getByCategoryID(returnID.intValue());
+        assertThat(byID).isNull();
+
+    }
+
 
 }

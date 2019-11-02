@@ -30,6 +30,9 @@ public interface RecipeDAO {
     @Update
     void updateRecipe(Recipe recipe);
 
+    @Query("Update RECIPE SET name=:new_name WHERE RecipeID=:id")
+    void updateByName(int id, String new_name);
+
     @Query("SELECT * FROM RECIPE ORDER BY NAME")
     LiveData<List<Recipe>> getAllRecipes();
 

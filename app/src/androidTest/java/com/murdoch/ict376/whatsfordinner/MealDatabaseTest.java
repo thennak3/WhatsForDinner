@@ -58,5 +58,19 @@ public class MealDatabaseTest {
 
     }
 
+    @Test
+    public void DeleteMealAndCheckInList() throws Exception {
+        Date date = new Date();
+        date = DateHelper.getStartOfDay(date);
+        Meal meal = MealTest.createMeal(2, date);
+        mMealDAO.insert(meal);
+
+        mMealDAO.deletebyDate(date);
+
+        Meal byID = mMealDAO.findMealByDate(date);
+        assertThat(byID).isNull();
+
+    }
+
 
 }

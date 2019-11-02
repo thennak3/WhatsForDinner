@@ -16,4 +16,11 @@ public class CategoryTest {
         Category category = new Category(name);
         return category;
     }
+
+    public static Category updateCategory(Category category, String name) {
+
+        category.setName(name);
+
+        return category;
+    }
 }

@@ -20,6 +20,12 @@ public interface CategoryDAO {
     @Update
     void update(Category... categories);
 
+    @Query("Update Category SET name=:new_name WHERE categoryID=:id")
+    void updateByName(int id, String new_name);
+
+    @Query("DELETE FROM Category WHERE categoryID = :id")
+    void deleteByID(int id);
+
     @Delete
     void delete(Category... categories);
 

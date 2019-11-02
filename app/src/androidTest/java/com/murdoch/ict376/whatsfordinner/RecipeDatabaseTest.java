@@ -61,10 +61,22 @@ public class RecipeDatabaseTest {
 
         String updated_name = "Testing 2";
         RecipeTest.updateRecipe(recipe, updated_name);
-        mRecipeDAO.updateRecipe(recipe);
+        mRecipeDAO.updateByName(returnID.intValue(), updated_name);
 
         Recipe byID = mRecipeDAO.findRecipeByID(returnID.intValue());
         assertThat(byID.getRecipeID()).isEqualTo(returnID);
+        assertThat(updated_name).isEqualTo(byID.getName());
+
+    }
+
+    @Test
+    public void DeleteRecipeAndCheckInList() throws Exception {
+        Recipe recipe = RecipeTest.createRecipe("Test Recipe");
+        Long returnID = mRecipeDAO.insert(recipe);
+        mRecipeDAO.deleteByID(returnID.intValue());
+
+        Recipe byID = mRecipeDAO.findRecipeByID(returnID.intValue());
+        assertThat(byID).isNull();
 
     }
 
