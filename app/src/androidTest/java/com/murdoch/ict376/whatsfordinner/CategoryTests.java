@@ -1,7 +1,5 @@
 package com.murdoch.ict376.whatsfordinner;
 
-import com.murdoch.ict376.whatsfordinner.tests.CategoryTest;
-
 import org.junit.Test;
 import static org.junit.Assert.*;
 

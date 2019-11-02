@@ -32,6 +32,10 @@ android {
         enabled true
     }
 
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
+
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8
@@ -48,10 +52,24 @@ dependencies {
 
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
+    /*testImplementation 'junit:junit:4.12'
+
+    testImplementation 'org.mockito:mockito-core:2.19.0'
+
+
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    androidTestImplementation 'androidx.test:rules:1.1.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation "androidx.arch.core:core-testing:2.1.0"*/
+
+    androidTestImplementation 'com.google.truth:truth:1.0'
+    implementation "android.arch.lifecycle:extensions:1.1.1"
+    implementation "android.arch.lifecycle:viewmodel:1.1.1"
+    implementation "android.arch.lifecycle:livedata:1.1.1"
+    testImplementation 'androidx.test:core:1.2.0'
+    androidTestImplementation "android.arch.core:core-testing:1.1.1"
+    annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
+    androidTestImplementation 'androidx.test:core:1.2.0'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
 
 
 
@@ -69,7 +87,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
 
-    androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
     implementation "androidx.recyclerview:recyclerview:1.1.0-rc01"
     implementation 'com.google.android.material:material:1.0.0'
 

@@ -32,4 +32,7 @@ public interface CategoryDAO {
     @Query("delete from category")
     void deleteAll();
 
+    @Query("select * from category where categoryID=:id")
+    Category getByCategoryID(int id);
+
 }
