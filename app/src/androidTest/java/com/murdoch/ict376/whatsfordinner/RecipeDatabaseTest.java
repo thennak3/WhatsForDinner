@@ -54,5 +54,19 @@ public class RecipeDatabaseTest {
 
     }
 
+    @Test
+    public void updateRecipeAndCheckInList() throws Exception {
+        Recipe recipe = RecipeTest.createRecipe("Test Recipe");
+        Long returnID = mRecipeDAO.insert(recipe);
+
+        String updated_name = "Testing 2";
+        RecipeTest.updateRecipe(recipe, updated_name);
+        mRecipeDAO.updateRecipe(recipe);
+
+        Recipe byID = mRecipeDAO.findRecipeByID(returnID.intValue());
+        assertThat(byID.getRecipeID()).isEqualTo(returnID);
+
+    }
+
 
 }

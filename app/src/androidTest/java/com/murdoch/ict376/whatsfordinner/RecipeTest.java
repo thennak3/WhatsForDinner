@@ -16,4 +16,11 @@ public class RecipeTest {
         Recipe recipe = new Recipe(name);
         return recipe;
     }
+
+    public static Recipe updateRecipe(Recipe recipe, String name) {
+
+        recipe.setName(name);
+
+        return recipe;
+    }
 }
