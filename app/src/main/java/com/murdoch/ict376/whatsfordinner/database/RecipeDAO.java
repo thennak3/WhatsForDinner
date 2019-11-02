@@ -35,4 +35,5 @@ public interface RecipeDAO {
 
     @Query("SELECT * FROM RECIPE WHERE RecipeID=:input")
     LiveData<Recipe> getRecipe(Integer input);
+
 }
