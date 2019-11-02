@@ -46,13 +46,15 @@ public class MealDatabaseTest {
     }
 
     @Test
-    public void writeMealAndCheckInList() throws Exception {
+    public void writeMealAndCheckExists() throws Exception {
         Date date = new Date();
+        date = DateHelper.getStartOfDay(date);
         Meal meal = MealTest.createMeal(2, date);
-        Long returnID = mMealDAO.insert(meal);
+        mMealDAO.insert(meal);
 
-        Meal byID = mMealDAO.findMealByID(returnID.intValue());
-        assertThat(byID.getRecipeID()).isEqualTo(returnID);
+
+        Meal byID = mMealDAO.findMealByDate(date);
+        assertThat(date.equals(byID.getMealDate())).isTrue();
 
     }
 
