@@ -19,6 +19,9 @@ public interface MealDAO {
     @Query("SELECT * FROM MEAL WHERE MealDate = :date LIMIT 1")
     Meal findMealByDate(int date);
 
+    @Query("SELECT * FROM MEAL WHERE RecipeID = :id LIMIT 1")
+    Meal findMealByID(int id);
+
     /* not sure how to just search for a months worth here
     @Query("SELECT * FROM MEAL WHERE mealDate = month)
     Meal findMealsByMonth(int month);
