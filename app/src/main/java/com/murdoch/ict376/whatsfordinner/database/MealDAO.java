@@ -38,6 +38,9 @@ public interface MealDAO {
     @Update
     void updateMeal(Meal meal);
 
+    @Query("Update Meal SET RecipeID=:id WHERE mealDate=:date")
+    void updateByDate(Date date, int id);
+
     @Insert
     long insert(Meal meal);
 

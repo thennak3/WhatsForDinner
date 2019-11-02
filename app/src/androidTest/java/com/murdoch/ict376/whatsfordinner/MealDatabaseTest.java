@@ -72,5 +72,22 @@ public class MealDatabaseTest {
 
     }
 
+    @Test
+    public void updateMealAndCheckInList() throws Exception {
+        Date date = new Date();
+        date = DateHelper.getStartOfDay(date);
+        Meal meal = MealTest.createMeal(2, date);
+        mMealDAO.insert(meal);
+
+        int updated_meal = 3;
+        MealTest.updateMeal(meal, updated_meal);
+        mMealDAO.updateByDate(date, updated_meal);
+
+        Meal byID = mMealDAO.findMealByDate(date);
+        assertThat(date.equals(byID.getMealDate())).isTrue();
+        assertThat(updated_meal).isEqualTo(byID.getRecipeID());
+
+    }
+
 
 }

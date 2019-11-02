@@ -8,20 +8,14 @@ import static org.junit.Assert.assertTrue;
 public class MealTests {
 
     @Test
-    public void nameValidator_isCorrectName() {
-        assertTrue(MealTest.isValidName("Beef Pie"));
+    public void nameValidator_isCorrectID() {
+        assertTrue(MealTest.isValidID(2));
 
     }
 
     @Test
-    public void nameValidator_isEmptyString() {
-        assertFalse(MealTest.isValidName(""));
-
-    }
-
-    @Test
-    public void nameValidator_isNull() {
-        assertFalse(MealTest.isValidName(null));
+    public void nameValidator_isNegative() {
+        assertFalse(MealTest.isValidID(-3));
 
     }
 }
